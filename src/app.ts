@@ -1,6 +1,3 @@
-(function () {
-  let company: string;
+import { env } from './config';
 
-  company = 'Proshore';
-  console.log(company);
-})();
+console.log(env.PORT);
