@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Todo } from '../models/todo.model';
+import { createTaskService } from '../services';
 import { Error as MongooseError } from 'mongoose';
 
 export async function createTask(req: Request, res: Response) {
@@ -9,14 +9,9 @@ export async function createTask(req: Request, res: Response) {
     return res.sendStatus(400);
   }
 
-  const todo = new Todo({
-    name,
-    description,
-  });
-
   try {
-    await todo.save();
-    return res.status(201).json(todo);
+    const createdTodo = await createTaskService({ name, description });
+    return res.status(201).json(createdTodo);
   } catch (error: MongooseError | any) {
     if (error instanceof MongooseError.ValidationError) {
       return res.status(400).json({ error: error.message });
