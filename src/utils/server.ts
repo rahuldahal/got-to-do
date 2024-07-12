@@ -1,9 +1,12 @@
 import express from 'express';
+import routes from '../routes/todo.route';
 
 function createServer() {
   const app = express();
 
-  app.use((_, res) => res.sendStatus(200));
+  app.use(express.json());
+  app.use('/todos', routes);
+
   return app;
 }
 
