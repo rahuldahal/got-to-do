@@ -1,0 +1,26 @@
+{
+  "name": "got-to-do",
+  "version": "0.1.0",
+  "description": "A to-do app service.",
+  "main": "src/app.ts",
+  "dependencies": {
+    "@types/node": "^20.14.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "ts-node src/app.ts",
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahuldahal/got-to-do.git"
+  },
+  "author": "Rahul Dahal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rahuldahal/got-to-do/issues"
+  },
+  "homepage": "https://github.com/rahuldahal/got-to-do#readme"
+}
