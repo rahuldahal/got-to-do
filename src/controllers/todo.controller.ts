@@ -13,10 +13,10 @@ export async function createTaskHandler(
   res: Response,
   next: NextFunction,
 ) {
-  const { name, description } = req.body;
+  const { name, description, username } = req.body;
 
   try {
-    const createdTodo = await createTask({ name, description });
+    const createdTodo = await createTask({ name, description, username });
     return res.status(StatusCodes.CREATED).json(createdTodo);
   } catch (error: MongooseError | any) {
     if (error instanceof MongooseError.ValidationError) {

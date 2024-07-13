@@ -1,6 +1,6 @@
-import { CreateTaskDTO, UpdateTaskDTO } from '../DTO/todo.dto';
 import { Todo } from '../models/todo.model';
 import { Error as MongooseError } from 'mongoose';
+import { CreateTaskDTO, UpdateTaskDTO } from '../DTO/todo.dto';
 
 async function createTask(data: CreateTaskDTO) {
   const todo = new Todo(data);

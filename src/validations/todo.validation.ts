@@ -16,6 +16,9 @@ export const createTaskSchema = object({
     description: string({
       required_error: validationErrors.fieldIsRequired('description'),
     }),
+    username: string({
+      required_error: validationErrors.fieldIsRequired('description'),
+    }),
   }),
 });
 
