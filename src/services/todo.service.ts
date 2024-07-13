@@ -36,4 +36,13 @@ async function updateTask(id: string, newData: UpdateTaskDTO) {
   }
 }
 
-export { createTask, getTasks, updateTask };
+async function deleteTask(id: string) {
+  try {
+    const task = await Todo.findByIdAndDelete(id);
+    return task;
+  } catch (error: MongooseError | any) {
+    return error;
+  }
+}
+
+export { createTask, getTasks, updateTask, deleteTask };

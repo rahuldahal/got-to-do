@@ -2,7 +2,7 @@ import { OBJECT_ID_REGEX } from '../constants';
 import { StatusCodes } from 'http-status-codes';
 import { Error as MongooseError } from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
-import { createTask, getTasks, updateTask } from '../services';
+import { createTask, deleteTask, getTasks, updateTask } from '../services';
 import {
   CreateTaskInput,
   validateUpdateTaskBody,
@@ -71,4 +71,30 @@ export async function updateTaskHandler(
   } catch (error: MongooseError | any) {
     return next(error);
   }
+}
+
+export async function deleteTaskHandler(
+  req: Request<{ id: string }, {}>,
+  res: Response,
+  next: NextFunction,
+) {
+  const { params } = req;
+  if (params === undefined) {
+    return res.status(StatusCodes.BAD_REQUEST).end();
+  }
+
+  const { id } = params;
+  if (!id.match(OBJECT_ID_REGEX)) {
+    return res.status(StatusCodes.BAD_REQUEST).end();
+  }
+
+  const task = await deleteTask(id);
+
+  if (!task) {
+    return res
+      .status(StatusCodes.NOT_FOUND)
+      .json({ message: 'Task not found' });
+  }
+
+  res.json({ message: 'Task deleted' });
 }
