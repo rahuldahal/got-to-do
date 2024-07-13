@@ -14,6 +14,7 @@ export async function authorize(
   next: NextFunction,
 ) {
   const token = req.header('Authorization')?.replace('Bearer ', '');
+  console.log(token);
 
   if (!token) {
     return res.status(StatusCodes.UNAUTHORIZED).end();

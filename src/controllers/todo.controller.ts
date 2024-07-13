@@ -7,6 +7,7 @@ import {
   CreateTaskInput,
   validateUpdateTaskBody,
 } from '../validations/todo.validation';
+import { CustomRequest } from '../middlewares/authorization.middleware';
 
 export async function createTaskHandler(
   req: Request<{}, {}, CreateTaskInput['body']>,
@@ -28,12 +29,12 @@ export async function createTaskHandler(
 }
 
 export async function getTasksHandler(
-  _: Request,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const tasks = await getTasks();
+    const tasks = await getTasks(req.username);
     return res.status(StatusCodes.OK).json(tasks);
   } catch (error: MongooseError | any) {
     return next(error);
@@ -41,7 +42,7 @@ export async function getTasksHandler(
 }
 
 export async function updateTaskHandler(
-  req: Request<{ id: string }, {}>,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -59,7 +60,11 @@ export async function updateTaskHandler(
 
   try {
     validateUpdateTaskBody({ name, description, completedAt });
-    const task = await updateTask(id, { name, description, completedAt });
+    const task = await updateTask(req.username, id, {
+      name,
+      description,
+      completedAt,
+    });
 
     if (!task) {
       return res
@@ -74,7 +79,7 @@ export async function updateTaskHandler(
 }
 
 export async function deleteTaskHandler(
-  req: Request<{ id: string }, {}>,
+  req: CustomRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -88,13 +93,17 @@ export async function deleteTaskHandler(
     return res.status(StatusCodes.BAD_REQUEST).end();
   }
 
-  const task = await deleteTask(id);
+  try {
+    const task = await deleteTask(req.username, id);
 
-  if (!task) {
-    return res
-      .status(StatusCodes.NOT_FOUND)
-      .json({ message: 'Task not found' });
+    if (!task) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: 'Task not found' });
+    }
+
+    res.json({ message: 'Task deleted' });
+  } catch (error: any) {
+    return next(error);
   }
-
-  res.json({ message: 'Task deleted' });
 }

@@ -13,19 +13,23 @@ async function createTask(data: CreateTaskDTO) {
   }
 }
 
-async function getTasks() {
+async function getTasks(username: string | undefined) {
   try {
-    const todos = await Todo.find();
+    const todos = await Todo.find({ username });
     return todos;
   } catch (error: MongooseError | any) {
     return error;
   }
 }
 
-async function updateTask(id: string, newData: UpdateTaskDTO) {
+async function updateTask(
+  username: string | undefined,
+  id: string,
+  newData: UpdateTaskDTO,
+) {
   try {
     const task = await Todo.findByIdAndUpdate(
-      id,
+      { username, id },
       { ...newData, updatedAt: new Date() },
       { new: true },
     );
@@ -36,9 +40,9 @@ async function updateTask(id: string, newData: UpdateTaskDTO) {
   }
 }
 
-async function deleteTask(id: string) {
+async function deleteTask(username: string | undefined, id: string) {
   try {
-    const task = await Todo.findByIdAndDelete(id);
+    const task = await Todo.findByIdAndDelete({ username, id });
     return task;
   } catch (error: MongooseError | any) {
     return error;
