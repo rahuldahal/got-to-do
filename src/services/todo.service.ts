@@ -1,4 +1,4 @@
-import { CreateTaskDTO } from '../DTO/todo.dto';
+import { CreateTaskDTO, UpdateTaskDTO } from '../DTO/todo.dto';
 import { Todo } from '../models/todo.model';
 import { Error as MongooseError } from 'mongoose';
 
@@ -22,4 +22,18 @@ async function getTasks() {
   }
 }
 
-export { createTask, getTasks };
+async function updateTask(id: string, newData: UpdateTaskDTO) {
+  try {
+    const task = await Todo.findByIdAndUpdate(
+      id,
+      { ...newData, updatedAt: new Date() },
+      { new: true },
+    );
+
+    return task;
+  } catch (error: MongooseError | any) {
+    return error;
+  }
+}
+
+export { createTask, getTasks, updateTask };
