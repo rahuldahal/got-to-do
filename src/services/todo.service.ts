@@ -9,7 +9,7 @@ async function createTask(data: CreateTaskDTO) {
     await todo.save();
     return todo;
   } catch (error: MongooseError | any) {
-    error;
+    return error;
   }
 }
 

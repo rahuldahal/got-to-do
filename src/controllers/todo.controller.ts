@@ -1,12 +1,13 @@
 import { createTask } from '../services';
-import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { Error as MongooseError } from 'mongoose';
+import { NextFunction, Request, Response } from 'express';
 import { CreateTaskInput } from '../validations/todo.validation';
 
 export async function createTaskHandler(
   req: Request<{}, {}, CreateTaskInput['body']>,
   res: Response,
+  next: NextFunction,
 ) {
   const { name, description } = req.body;
 
@@ -17,8 +18,7 @@ export async function createTaskHandler(
     if (error instanceof MongooseError.ValidationError) {
       return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
-    return res
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: error.message });
+
+    return next(error);
   }
 }
