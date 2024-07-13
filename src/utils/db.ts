@@ -1,3 +1,4 @@
+import log from './logger';
 import mongoose from 'mongoose';
 import { env } from '../config';
 
@@ -6,9 +7,9 @@ async function connect() {
 
   try {
     await mongoose.connect(MONGO_ATLAS_URL);
-    console.info('Connected to the database!');
+    log.info('Connected to the database!');
   } catch (error) {
-    console.error(error);
+    log.error(error);
     process.exit(1);
   }
 }
