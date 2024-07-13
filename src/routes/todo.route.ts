@@ -1,8 +1,10 @@
 import express from 'express';
-import { createTask } from '../controllers/todo.controller';
+import { createTaskHandler } from '../controllers/todo.controller';
+import { validate } from '../middlewares/validateResource.middleware';
+import { createTaskSchema } from '../validations/todo.validation';
 
 const router = express.Router();
 
-router.post('/', createTask);
+router.post('/', validate(createTaskSchema), createTaskHandler);
 
 export default router;

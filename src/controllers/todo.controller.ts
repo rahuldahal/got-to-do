@@ -1,21 +1,24 @@
+import { createTask } from '../services';
 import { Request, Response } from 'express';
-import { createTaskService } from '../services';
+import { StatusCodes } from 'http-status-codes';
 import { Error as MongooseError } from 'mongoose';
+import { CreateTaskInput } from '../validations/todo.validation';
 
-export async function createTask(req: Request, res: Response) {
+export async function createTaskHandler(
+  req: Request<{}, {}, CreateTaskInput['body']>,
+  res: Response,
+) {
   const { name, description } = req.body;
 
-  if (!name || !description) {
-    return res.sendStatus(400);
-  }
-
   try {
-    const createdTodo = await createTaskService({ name, description });
-    return res.status(201).json(createdTodo);
+    const createdTodo = await createTask({ name, description });
+    return res.status(StatusCodes.CREATED).json(createdTodo);
   } catch (error: MongooseError | any) {
     if (error instanceof MongooseError.ValidationError) {
-      return res.status(400).json({ error: error.message });
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
-    return res.status(500).json({ error: error.message });
+    return res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 }
