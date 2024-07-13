@@ -1,4 +1,4 @@
-import { createTask } from '../services';
+import { createTask, getTasks } from '../services';
 import { StatusCodes } from 'http-status-codes';
 import { Error as MongooseError } from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
@@ -19,6 +19,19 @@ export async function createTaskHandler(
       return res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
     }
 
+    return next(error);
+  }
+}
+
+export async function getTasksHandler(
+  _: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const tasks = await getTasks();
+    return res.status(StatusCodes.OK).json(tasks);
+  } catch (error: MongooseError | any) {
     return next(error);
   }
 }

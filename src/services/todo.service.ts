@@ -13,4 +13,13 @@ async function createTask(data: CreateTaskDTO) {
   }
 }
 
-export { createTask };
+async function getTasks() {
+  try {
+    const todos = await Todo.find();
+    return todos;
+  } catch (error: MongooseError | any) {
+    return error;
+  }
+}
+
+export { createTask, getTasks };
